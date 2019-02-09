@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "lib": ["es2018", "dom"],
+    "jsx": "react"
+  }
+}
