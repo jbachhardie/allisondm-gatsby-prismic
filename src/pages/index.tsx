@@ -28,8 +28,8 @@ const Index = ({
           <a href={url}>
             <h2>{title.text}</h2>
             <Img fixed={thumbnail.localFile.childImageSharp.fixed} />
-            {roles.map(({ id }) => (
-              <p>{id}</p>
+            {roles.map(({ role }) => (
+              <img src={role.document[0].data.icon.url} width={50} />
             ))}
           </a>
         )
@@ -75,7 +75,15 @@ export const pageQuery = graphql`
                   }
                 }
                 roles {
-                  id
+                  role {
+                    document {
+                      data {
+                        icon {
+                          url
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }

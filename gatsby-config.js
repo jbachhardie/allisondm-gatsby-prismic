@@ -21,7 +21,7 @@ module.exports = {
       options: {
         repositoryName: `allisondm`,
         accessToken: `${process.env.API_KEY}`,
-        linkResolver: ({ node, key, value }) => post => `/${post.uid}`
+        linkResolver: ({ node, key, value }) => video => `/${video.uid}`
       }
     }
   ]
