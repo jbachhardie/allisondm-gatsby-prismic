@@ -36,12 +36,19 @@ const QuickLinkContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-evenly;
+  @media (min-width: 640px) {
+    bottom: 1.5rem;
+  }
+  @media (min-width: 1280px) {
+    bottom: 2rem;
+  }
 `
 
 const QuickLinkIcon = styled.img`
   filter: invert(1);
   transition: opacity 0.25s ease;
   opacity: 0.8;
+  margin-bottom: 0;
   &:hover {
     opacity: 1;
   }
@@ -95,10 +102,17 @@ const RoleContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-evenly;
+  @media (min-width: 640px) {
+    bottom: 1.5rem;
+  }
+  @media (min-width: 1280px) {
+    bottom: 2rem;
+  }
 `
 
 const RoleIcon = styled.img`
   filter: invert(1);
+  margin-bottom: 0;
 `
 
 const Index = ({
