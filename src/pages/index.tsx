@@ -1,39 +1,157 @@
 import * as React from 'react'
-import { graphql } from 'gatsby'
+import { graphql, Link } from 'gatsby'
 import Img from 'gatsby-image'
+import styled from 'styled-components'
+
+import * as colors from '../styles/colors'
+import About from '../components/about'
+
+const BackgroundVideo = styled.video`
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -100;
+`
+
+const Title = styled.h1`
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  text-transform: uppercase;
+  font-size: 2.5rem;
+  letter-spacing: 0.25rem;
+  opacity: 0.8;
+  z-index: -90;
+  color: ${colors.white};
+`
+
+const QuickLinkContainer = styled.div`
+  position: fixed;
+  bottom: 1rem;
+  z-index: -90;
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+`
+
+const QuickLinkIcon = styled.img`
+  filter: invert(1);
+  transition: opacity 0.25s ease;
+  opacity: 0.8;
+  &:hover {
+    opacity: 1;
+  }
+`
+
+const ShowreelSection = styled.section`
+  margin-top: 100vh;
+  background-color: ${colors.black};
+  line-height: 0;
+  padding: 0.25rem;
+`
+
+const ShowreelPanel = styled(Link)`
+  position: relative;
+  display: inline-block;
+  padding: 0.25rem;
+  width: 100%;
+  @media (min-width: 640px) {
+    width: 50%;
+  }
+  @media (min-width: 1280px) {
+    width: 33.33%;
+  }
+`
+
+const ShowreelPanelOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 50;
+  background: ${colors.black};
+  transition: opacity 0.25s ease;
+  opacity: 0;
+  &:hover {
+    opacity: 0.8;
+  }
+`
+
+const ShowreelTitle = styled.h2`
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  color: ${colors.white};
+`
+
+const RoleContainer = styled.div`
+  position: absolute;
+  bottom: 1rem;
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+`
+
+const RoleIcon = styled.img`
+  filter: invert(1);
+`
 
 const Index = ({
   data: {
     prismicIndexPage: {
-      data: { title, quick_links, panel }
+      data: { title, banner_video, quick_links, panel }
     }
   }
 }) => (
   <>
-    <h1>{title.text}</h1>
-    {quick_links.map(({ icon, link_to_section, link }) => (
-      <a
-        href={(link && link.url) || `#${link_to_section}`}
-        target={(link && link.target) || '_self'}
-      >
-        <img width={50} src={icon.url} />
-      </a>
-    ))}
-    <section id="showreel">
-      {panel.map(({ video: { url, document } }) => {
+    <Title>{title.text}</Title>
+    {banner_video && (
+      <BackgroundVideo autoPlay loop muted playsInline>
+        <source src={banner_video.url} type="video/mp4" />
+      </BackgroundVideo>
+    )}
+    <QuickLinkContainer>
+      {quick_links.map(({ icon, link_to_section, link }) => (
+        <a
+          key={icon.url}
+          href={(link && link.url) || `#${link_to_section}`}
+          target={(link && link.target) || '_self'}
+        >
+          <QuickLinkIcon width={50} src={icon.url} />
+        </a>
+      ))}
+    </QuickLinkContainer>
+    <ShowreelSection id="showreel">
+      {panel.map(({ video: { url, document } }, index) => {
         const {
           data: { title, thumbnail, roles }
         } = document[0]
         return (
-          <a href={url}>
-            <h2>{title.text}</h2>
-            <Img fixed={thumbnail.localFile.childImageSharp.fixed} />
-            {roles.map(({ role }) => (
-              <img src={role.document[0].data.icon.url} width={50} />
-            ))}
-          </a>
+          <ShowreelPanel key={index} to={url}>
+            <Img fluid={thumbnail.localFile.childImageSharp.fluid} />
+            <ShowreelPanelOverlay>
+              <ShowreelTitle>{title.text}</ShowreelTitle>
+              <RoleContainer>
+                {roles.map(({ role }, index) => (
+                  <RoleIcon
+                    key={index}
+                    src={role.document[0].data.icon.url}
+                    width={50}
+                  />
+                ))}
+              </RoleContainer>
+            </ShowreelPanelOverlay>
+          </ShowreelPanel>
         )
       })}
+    </ShowreelSection>
+    <section id="about">
+      <About />
     </section>
   </>
 )
@@ -46,6 +164,9 @@ export const pageQuery = graphql`
       data {
         title {
           text
+        }
+        banner_video {
+          url
         }
         quick_links {
           icon {
@@ -68,8 +189,8 @@ export const pageQuery = graphql`
                 thumbnail {
                   localFile {
                     childImageSharp {
-                      fixed(width: 640, height: 320) {
-                        ...GatsbyImageSharpFixed_withWebp
+                      fluid(maxWidth: 640, maxHeight: 320) {
+                        ...GatsbyImageSharpFluid_withWebp
                       }
                     }
                   }

@@ -4,6 +4,14 @@ require('dotenv').config({
 
 module.exports = {
   plugins: [
+    {
+      resolve: `gatsby-source-prismic`,
+      options: {
+        repositoryName: `allisondm`,
+        accessToken: `${process.env.API_KEY}`,
+        linkResolver: ({ node, key, value }) => video => `/${video.uid}`
+      }
+    },
     `gatsby-plugin-sharp`,
     `gatsby-transformer-sharp`,
     // `gatsby-source-filesystem`,
@@ -15,14 +23,6 @@ module.exports = {
         pathToConfigModule: `src/utils/typography`
       }
     },
-    `gatsby-plugin-styled-components`,
-    {
-      resolve: `gatsby-source-prismic`,
-      options: {
-        repositoryName: `allisondm`,
-        accessToken: `${process.env.API_KEY}`,
-        linkResolver: ({ node, key, value }) => video => `/${video.uid}`
-      }
-    }
+    `gatsby-plugin-styled-components`
   ]
 }
