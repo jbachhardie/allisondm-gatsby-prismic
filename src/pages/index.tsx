@@ -6,6 +6,11 @@ import styled from 'styled-components'
 import * as colors from '../styles/colors'
 import About from '../components/about'
 
+const CoverSection = styled.section`
+  position: relative;
+  height: 100vh;
+`
+
 const BackgroundVideo = styled.video`
   position: fixed;
   right: 0;
@@ -19,21 +24,19 @@ const BackgroundVideo = styled.video`
 
 const Title = styled.h1`
   display: none;
-  position: fixed;
+  position: absolute;
   top: 1rem;
   left: 1rem;
   text-transform: uppercase;
   font-size: 2.5rem;
   letter-spacing: 0.25rem;
   opacity: 0.8;
-  z-index: -90;
   color: ${colors.white};
 `
 
 const QuickLinkContainer = styled.div`
-  position: fixed;
+  position: absolute;
   bottom: 1rem;
-  z-index: -90;
   width: 100%;
   display: flex;
   justify-content: space-evenly;
@@ -56,7 +59,6 @@ const QuickLinkIcon = styled.img`
 `
 
 const ShowreelSection = styled.section`
-  margin-top: 100vh;
   background-color: ${colors.black};
   line-height: 0;
   padding: 0.25rem;
@@ -128,23 +130,25 @@ const Index = ({
   }
 }) => (
   <>
-    <Title>{title.text}</Title>
-    {banner_video && (
-      <BackgroundVideo autoPlay loop muted playsInline>
-        <source src={banner_video.url} type="video/mp4" />
-      </BackgroundVideo>
-    )}
-    <QuickLinkContainer>
-      {quick_links.map(({ icon, link_to_section, link }) => (
-        <a
-          key={icon.url}
-          href={(link && link.url) || `#${link_to_section}`}
-          target={(link && link.target) || '_self'}
-        >
-          <QuickLinkIcon width={50} src={icon.url} />
-        </a>
-      ))}
-    </QuickLinkContainer>
+    <CoverSection id="cover">
+      <Title>{title.text}</Title>
+      {banner_video && (
+        <BackgroundVideo autoPlay loop muted playsInline>
+          <source src={banner_video.url} type="video/mp4" />
+        </BackgroundVideo>
+      )}
+      <QuickLinkContainer>
+        {quick_links.map(({ icon, link_to_section, link }) => (
+          <a
+            key={icon.url}
+            href={(link && link.url) || `#${link_to_section}`}
+            target={(link && link.target) || '_self'}
+          >
+            <QuickLinkIcon width={50} src={icon.url} />
+          </a>
+        ))}
+      </QuickLinkContainer>
+    </CoverSection>
     <ShowreelSection id="showreel">
       {panel.map(({ video: { url, document } }, index) => {
         const {
