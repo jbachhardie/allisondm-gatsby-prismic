@@ -120,6 +120,22 @@ const RoleIcon = styled.img`
 
 const AboutSection = styled.section`
   background: ${colors.white};
+  padding-bottom: 2rem;
+`
+
+const FooterContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+`
+
+const FooterIcon = styled.img`
+  transition: opacity 0.25s ease;
+  opacity: 0.8;
+  margin-bottom: 0;
+  &:hover {
+    opacity: 1;
+  }
 `
 
 const Index = ({
@@ -175,6 +191,17 @@ const Index = ({
     </ShowreelSection>
     <AboutSection id="about">
       <About />
+      <FooterContainer>
+        {quick_links.map(({ icon, link_to_section, link }) => (
+          <a
+            key={icon.url}
+            href={(link && link.url) || `#${link_to_section}`}
+            target={(link && link.target) || '_self'}
+          >
+            <FooterIcon width={50} src={icon.url} />
+          </a>
+        ))}
+      </FooterContainer>
     </AboutSection>
   </>
 )
