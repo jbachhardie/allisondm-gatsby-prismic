@@ -5,6 +5,10 @@ import styled from 'styled-components'
 
 import * as colors from '../styles/colors'
 
+const BannerContainer = styled.div`
+  position: relative;
+`
+
 const VideoBanner = styled.video`
   width: 100%;
 `
@@ -16,11 +20,15 @@ const BlurbContainer = styled.div`
 `
 
 const QuickLinkContainer = styled.div`
-  position: relative;
-  top: -3rem;
+  position: absolute;
+  bottom: 0.5rem;
   width: 100%;
   display: flex;
   justify-content: space-evenly;
+  z-index: 10;
+  @media (min-width: 640px) {
+    bottom: 1rem;
+  }
 `
 
 const QuickLink = styled.a`
@@ -36,6 +44,10 @@ const PortraitContainer = styled.div`
   img {
     margin: 0;
   }
+  display: none;
+  @media (min-width: 640px) {
+    display: unset;
+  }
 `
 
 const About = ({
@@ -46,20 +58,22 @@ const About = ({
   }
 }) => (
   <>
-    <VideoBanner autoPlay loop muted playsInline>
-      <source src={banner_video.url} type="video/mp4" />
-    </VideoBanner>
-    <QuickLinkContainer>
-      {quick_links.map(({ title, link }) => (
-        <QuickLink
-          key={link.url}
-          href={link.url}
-          target={link.target || '_self'}
-        >
-          <h3>{title.text}</h3>
-        </QuickLink>
-      ))}
-    </QuickLinkContainer>
+    <BannerContainer>
+      <VideoBanner autoPlay loop muted playsInline>
+        <source src={banner_video.url} type="video/mp4" />
+      </VideoBanner>
+      <QuickLinkContainer>
+        {quick_links.map(({ title, link }) => (
+          <QuickLink
+            key={link.url}
+            href={link.url}
+            target={link.target || '_self'}
+          >
+            <h3>{title.text}</h3>
+          </QuickLink>
+        ))}
+      </QuickLinkContainer>
+    </BannerContainer>
     <BlurbContainer>
       <PortraitContainer>
         <Img fluid={profile_picture.localFile.childImageSharp.fluid} />
