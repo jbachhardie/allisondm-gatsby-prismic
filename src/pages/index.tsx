@@ -18,6 +18,7 @@ const BackgroundVideo = styled.video`
 `
 
 const Title = styled.h1`
+  display: none;
   position: fixed;
   top: 1rem;
   left: 1rem;
@@ -115,6 +116,10 @@ const RoleIcon = styled.img`
   margin-bottom: 0;
 `
 
+const AboutSection = styled.section`
+  background: ${colors.white};
+`
+
 const Index = ({
   data: {
     prismicIndexPage: {
@@ -164,9 +169,9 @@ const Index = ({
         )
       })}
     </ShowreelSection>
-    <section id="about">
+    <AboutSection id="about">
       <About />
-    </section>
+    </AboutSection>
   </>
 )
 
