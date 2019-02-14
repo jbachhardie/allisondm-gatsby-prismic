@@ -18,6 +18,13 @@ const BackgroundVideo = styled.video`
   z-index: -100;
   object-fit: cover;
   object-position: center;
+  @supports (-ms-accelerator: true) { /* Edge only */
+    width: auto;
+    height: auto;
+    min-width: 100%;
+    min-height: 100%;
+  }
+}
 `
 
 const Title = styled.h1`
@@ -38,6 +45,11 @@ const QuickLinkContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-evenly;
+  @supports (-ms-accelerator: true) {
+    /* Edge only */
+    justify-content: space-around;
+    /* you can also add some other adjustments to size, margins etc to get the same positioning */
+  }
   @media (min-width: 640px) {
     bottom: 1.5rem;
   }
@@ -103,6 +115,11 @@ const RoleContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-evenly;
+  @supports (-ms-accelerator: true) {
+    /* Edge only */
+    justify-content: space-around;
+    /* you can also add some other adjustments to size, margins etc to get the same positioning */
+  }
   @media (min-width: 640px) {
     bottom: 1.5rem;
   }
@@ -125,6 +142,11 @@ const FooterContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-evenly;
+  @supports (-ms-accelerator: true) {
+    /* Edge only */
+    justify-content: space-around;
+    /* you can also add some other adjustments to size, margins etc to get the same positioning */
+  }
 `
 
 const FooterIcon = styled.img`
