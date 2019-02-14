@@ -176,13 +176,16 @@ const Index = ({
             <ShowreelPanelOverlay>
               <ShowreelTitle>{title.text}</ShowreelTitle>
               <RoleContainer>
-                {roles.map(({ role }, index) => (
-                  <RoleIcon
-                    key={index}
-                    src={role.document[0].data.icon.url}
-                    width={50}
-                  />
-                ))}
+                {roles.map(
+                  ({ role }, index) =>
+                    role && (
+                      <RoleIcon
+                        key={index}
+                        src={role.document[0].data.icon.url}
+                        width={50}
+                      />
+                    )
+                )}
               </RoleContainer>
             </ShowreelPanelOverlay>
           </ShowreelPanel>
