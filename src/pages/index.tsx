@@ -141,7 +141,7 @@ const FooterIcon = styled.img`
 const Index = ({
   data: {
     prismicIndexPage: {
-      data: { title, banner_video, quick_links, panel }
+      data: { title, banner_video, quick_links = [], panel }
     }
   }
 }) => (
@@ -168,7 +168,7 @@ const Index = ({
     <ShowreelSection id="showreel">
       {panel.map(({ video: { url, document } }, index) => {
         const {
-          data: { title, thumbnail, roles }
+          data: { title, thumbnail, roles = [] }
         } = document[0]
         return (
           <ShowreelPanel key={index} to={url}>
