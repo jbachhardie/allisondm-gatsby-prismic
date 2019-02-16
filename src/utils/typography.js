@@ -3,6 +3,7 @@ import Typography from 'typography'
 const typography = new Typography({
   baseFontSize: '18px',
   baseLineHeight: 1.666,
+  headerWeight: 300,
   headerFontFamily: [
     'Antonio',
     'Avenir Next',
@@ -12,7 +13,12 @@ const typography = new Typography({
     'Arial',
     'sans-serif'
   ],
-  bodyFontFamily: ['Georgia', 'serif']
+  bodyFontFamily: ['Georgia', 'serif'],
+  overrideStyles: () => ({
+    h1: {
+      textTransform: 'uppercase'
+    }
+  })
 })
 
 export default typography

@@ -31,7 +31,7 @@ const QuickLinkContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-evenly;
-  z-index: 10;
+  z-index: 1;
   @media (min-width: 640px) {
     bottom: 1rem;
   }
@@ -41,6 +41,10 @@ const QuickLink = styled.a`
   text-decoration: none;
   text-transform: uppercase;
   color: ${colors.white};
+  font-size: 1.75rem;
+  font-family: 'Antonio';
+  font-weight: 300;
+  letter-spacing: 0.1rem;
 `
 
 const PortraitContainer = styled.div`
@@ -98,7 +102,7 @@ const About = ({
                   href={link.url}
                   target={link.target || '_self'}
                 >
-                  <h3>{title.text}</h3>
+                  {title.text}
                 </QuickLink>
               )
           )}
@@ -121,7 +125,7 @@ const About = ({
   </>
 )
 
-const AboutContainer = (props: Props) => (
+const AboutContainer = (props: {}) => (
   <StaticQuery
     query={graphql`
       query AboutPage {

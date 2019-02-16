@@ -12,15 +12,19 @@ import {
 import * as colors from '../styles/colors'
 import About from '../components/about'
 
+const HEADER_HEIGHT = `5rem`
+const VIDEO_HEIGHT = `calc(100vh - ${HEADER_HEIGHT})`
+
 const CoverSection = styled.section`
   position: relative;
-  height: 100vh;
+  height: ${VIDEO_HEIGHT};
 `
 
 const BackgroundVideo = styled.video`
   position: fixed;
   width: 100%;
-  height: 100%;
+  height: ${VIDEO_HEIGHT};
+  /* top: ${HEADER_HEIGHT}; */
   z-index: -100;
   object-fit: cover;
   object-position: center;
@@ -28,21 +32,31 @@ const BackgroundVideo = styled.video`
     width: auto;
     height: auto;
     min-width: 100%;
-    min-height: 100%;
+    min-height: ${VIDEO_HEIGHT};
   }
 }
 `
 
+const Header = styled.div`
+  position: fixed;
+  height: ${HEADER_HEIGHT};
+  z-index: 10;
+`
+
 const Title = styled.h1`
-  display: none;
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  text-transform: uppercase;
+  position: fixed;
+  width: 100%;
+  background: transparent;
+  height: ${HEADER_HEIGHT};
+  padding-left: 1rem;
+  line-height: ${HEADER_HEIGHT};
+  display: ${({ mobile }) => (mobile ? 'unset' : 'none')};
   font-size: 2.5rem;
   letter-spacing: 0.25rem;
-  opacity: 0.8;
   color: ${colors.white};
+  @media (min-width: 640px) {
+    display: ${({ mobile }) => (!mobile ? 'unset' : 'none')};
+  }
 `
 
 const QuickLinkContainer = styled.div`
@@ -73,11 +87,20 @@ const QuickLinkIcon = styled.img`
     opacity: 1;
   }
 `
+const MainContainer = styled.main`
+  & > * {
+    max-width: 1280px;
+    margin: auto;
+  }
+  background: ${colors.black};
+`
 
 const ShowreelSection = styled.section`
-  background-color: ${colors.black};
   line-height: 0;
-  padding: 0.25rem;
+`
+
+const InnerShowreelContainer = styled.div`
+  margin: 0 -0.25rem;
 `
 
 const ShowreelPanel = styled(Link)`
@@ -99,7 +122,7 @@ const ShowreelPanelOverlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 50;
+  z-index: 1;
   background: ${colors.black};
   transition: opacity 0.25s ease;
   opacity: 0;
@@ -146,6 +169,7 @@ const AboutSection = styled.section`
 
 const FooterContainer = styled.div`
   width: 100%;
+  height: ${HEADER_HEIGHT};
   display: flex;
   justify-content: space-evenly;
   @supports (-ms-accelerator: true) {
@@ -156,6 +180,7 @@ const FooterContainer = styled.div`
 `
 
 const FooterIcon = styled.img`
+  padding-top: 20%;
   transition: opacity 0.25s ease;
   opacity: 0.8;
   margin-bottom: 0;
@@ -163,6 +188,44 @@ const FooterIcon = styled.img`
     opacity: 1;
   }
 `
+
+const SeparatorContainer = styled.div`
+  height: ${HEADER_HEIGHT};
+  text-align: center;
+  width: 90%;
+`
+
+const SeparatorLine = styled.hr`
+  position: relative;
+  top: 50%;
+  overflow: visible; /* For IE */
+  padding: 0;
+  border: none;
+  border-top: medium double ${colors.primary};
+  color: ${colors.primary};
+  text-align: center;
+`
+
+const SeparatorIcon = styled.svg`
+  position: relative;
+  background: ${colors.black};
+  padding: 0 2rem;
+  top: -10%;
+  fill: ${colors.primary};
+  height: 50%;
+`
+
+const Separator = ({ to }) => (
+  <SeparatorContainer>
+    <SeparatorLine />
+    <a href={to}>
+      <SeparatorIcon xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+        <path d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z" />
+      </SeparatorIcon>
+    </a>
+  </SeparatorContainer>
+)
+
 interface PanelProps {
   video?: PrismicDocumentLink<{
     title?: PrismicTitle
@@ -232,8 +295,11 @@ const Index = ({
   }
 }: Props) => (
   <>
-    <CoverSection id="cover">
+    <Header>
       <Title>{title && title.text}</Title>
+      <Title mobile>ADM</Title>
+    </Header>
+    <CoverSection id="cover">
       {banner_video && (
         <BackgroundVideo autoPlay loop muted playsInline>
           <source src={banner_video.url} type="video/mp4" />
@@ -251,23 +317,30 @@ const Index = ({
         ))}
       </QuickLinkContainer>
     </CoverSection>
-    <ShowreelSection id="showreel">
-      {panel && panel.map((props, index) => <Panel key={index} {...props} />)}
-    </ShowreelSection>
-    <AboutSection id="about">
-      <About />
-      <FooterContainer>
-        {quick_links.map(({ icon, link_to_section, link }) => (
-          <a
-            key={icon && icon.url}
-            href={(link && link.url) || `#${link_to_section}`}
-            target={(link && link.target) || '_self'}
-          >
-            <FooterIcon width={50} src={icon && icon.url} />
-          </a>
-        ))}
-      </FooterContainer>
-    </AboutSection>
+    <MainContainer>
+      <Separator to="#showreel" />
+      <ShowreelSection id="showreel">
+        <InnerShowreelContainer>
+          {panel &&
+            panel.map((props, index) => <Panel key={index} {...props} />)}
+        </InnerShowreelContainer>
+      </ShowreelSection>
+      <Separator to="#about" />
+      <AboutSection id="about">
+        <About />
+        <FooterContainer>
+          {quick_links.map(({ icon, link_to_section, link }) => (
+            <a
+              key={icon && icon.url}
+              href={(link && link.url) || `#${link_to_section}`}
+              target={(link && link.target) || '_self'}
+            >
+              <FooterIcon width={50} src={icon && icon.url} />
+            </a>
+          ))}
+        </FooterContainer>
+      </AboutSection>
+    </MainContainer>
   </>
 )
 
