@@ -121,7 +121,7 @@ const About = ({
   </>
 )
 
-const AboutContainer = props => (
+const AboutContainer = (props: Props) => (
   <StaticQuery
     query={graphql`
       query AboutPage {
