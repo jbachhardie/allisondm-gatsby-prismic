@@ -4,6 +4,12 @@ import Img from 'gatsby-image'
 import styled from 'styled-components'
 
 import * as colors from '../styles/colors'
+import {
+  PrismicRichText,
+  PrismicTitle,
+  PrismicLink,
+  PrismicMedia
+} from '../prismic-types'
 
 const BannerContainer = styled.div`
   position: relative;
@@ -50,36 +56,67 @@ const PortraitContainer = styled.div`
   }
 `
 
+interface Props {
+  data: {
+    prismicAbout: {
+      data: {
+        title?: PrismicTitle
+        banner_video?: PrismicLink
+        quick_links?: Array<{
+          title?: PrismicTitle
+          link?: PrismicLink
+        }>
+        profile_picture?: PrismicMedia
+        blurb?: PrismicRichText
+      }
+    }
+  }
+}
+
 const About = ({
   data: {
     prismicAbout: {
       data: { title, banner_video, quick_links, profile_picture, blurb }
     }
   }
-}) => (
+}: Props) => (
   <>
     <BannerContainer>
-      <VideoBanner autoPlay loop muted playsInline>
-        <source src={banner_video.url} type="video/mp4" />
-      </VideoBanner>
-      <QuickLinkContainer>
-        {quick_links.map(({ title, link }) => (
-          <QuickLink
-            key={link.url}
-            href={link.url}
-            target={link.target || '_self'}
-          >
-            <h3>{title.text}</h3>
-          </QuickLink>
-        ))}
-      </QuickLinkContainer>
+      {banner_video && (
+        <VideoBanner autoPlay loop muted playsInline>
+          <source src={banner_video.url} type="video/mp4" />
+        </VideoBanner>
+      )}
+      {quick_links && (
+        <QuickLinkContainer>
+          {quick_links.map(
+            ({ title, link }) =>
+              link &&
+              title && (
+                <QuickLink
+                  key={link.url}
+                  href={link.url}
+                  target={link.target || '_self'}
+                >
+                  <h3>{title.text}</h3>
+                </QuickLink>
+              )
+          )}
+        </QuickLinkContainer>
+      )}
     </BannerContainer>
     <BlurbContainer>
-      <PortraitContainer>
-        <Img fluid={profile_picture.localFile.childImageSharp.fluid} />
-      </PortraitContainer>
-      <h2>{title.text}</h2>
-      <div dangerouslySetInnerHTML={{ __html: blurb.html }} />
+      {profile_picture &&
+        profile_picture.localFile &&
+        profile_picture.localFile.childImageSharp && (
+          <PortraitContainer>
+            <Img fluid={profile_picture.localFile.childImageSharp.fluid} />
+          </PortraitContainer>
+        )}
+      {title && title.text && <h2>{title.text}</h2>}
+      {blurb && blurb.html && (
+        <div dangerouslySetInnerHTML={{ __html: blurb.html }} />
+      )}
     </BlurbContainer>
   </>
 )

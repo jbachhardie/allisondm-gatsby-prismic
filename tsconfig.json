@@ -4,6 +4,7 @@
     "checkJs": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
+    "strictNullChecks": true,
     "lib": ["es2018", "dom"],
     "jsx": "react"
   }

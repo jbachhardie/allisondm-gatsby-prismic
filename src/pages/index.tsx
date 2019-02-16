@@ -2,6 +2,12 @@ import * as React from 'react'
 import { graphql, Link } from 'gatsby'
 import Img from 'gatsby-image'
 import styled from 'styled-components'
+import {
+  PrismicLink,
+  PrismicTitle,
+  PrismicDocumentLink,
+  PrismicMedia
+} from '../prismic-types'
 
 import * as colors from '../styles/colors'
 import About from '../components/about'
@@ -157,6 +163,66 @@ const FooterIcon = styled.img`
     opacity: 1;
   }
 `
+interface PanelProps {
+  video?: PrismicDocumentLink<{
+    title?: PrismicTitle
+    thumbnail?: PrismicMedia
+    roles?: Array<{
+      role?: PrismicDocumentLink<{ icon?: PrismicLink }>
+    }>
+  }>
+}
+
+const Panel = ({ video }: PanelProps) => {
+  if (!video) return null
+  const { url, document } = video
+  const {
+    data: { title, thumbnail, roles = [] }
+  } = document[0]
+  const imageProps =
+    thumbnail && thumbnail.localFile && thumbnail.localFile.childImageSharp
+  if (!imageProps) return null
+  return (
+    <ShowreelPanel to={url}>
+      {imageProps && <Img {...imageProps} />}
+      <ShowreelPanelOverlay>
+        <ShowreelTitle>{title && title.text}</ShowreelTitle>
+        <RoleContainer>
+          {roles.map(
+            ({ role }, index) =>
+              role &&
+              role.document &&
+              role.document[0] &&
+              role.document[0].data.icon && (
+                <RoleIcon
+                  key={index}
+                  src={role.document[0].data.icon.url}
+                  width={50}
+                />
+              )
+          )}
+        </RoleContainer>
+      </ShowreelPanelOverlay>
+    </ShowreelPanel>
+  )
+}
+
+interface Props {
+  data: {
+    prismicIndexPage: {
+      data: {
+        title?: PrismicTitle
+        banner_video: PrismicLink
+        quick_links: Array<{
+          icon?: PrismicLink
+          link_to_section?: string
+          link: PrismicLink
+        }>
+        panel?: Array<PanelProps>
+      }
+    }
+  }
+}
 
 const Index = ({
   data: {
@@ -164,10 +230,10 @@ const Index = ({
       data: { title, banner_video, quick_links = [], panel }
     }
   }
-}) => (
+}: Props) => (
   <>
     <CoverSection id="cover">
-      <Title>{title.text}</Title>
+      <Title>{title && title.text}</Title>
       {banner_video && (
         <BackgroundVideo autoPlay loop muted playsInline>
           <source src={banner_video.url} type="video/mp4" />
@@ -176,52 +242,28 @@ const Index = ({
       <QuickLinkContainer>
         {quick_links.map(({ icon, link_to_section, link }) => (
           <a
-            key={icon.url}
+            key={icon && icon.url}
             href={(link && link.url) || `#${link_to_section}`}
             target={(link && link.target) || '_self'}
           >
-            <QuickLinkIcon width={50} src={icon.url} />
+            <QuickLinkIcon width={50} src={icon && icon.url} />
           </a>
         ))}
       </QuickLinkContainer>
     </CoverSection>
     <ShowreelSection id="showreel">
-      {panel.map(({ video: { url, document } }, index) => {
-        const {
-          data: { title, thumbnail, roles = [] }
-        } = document[0]
-        return (
-          <ShowreelPanel key={index} to={url}>
-            <Img fluid={thumbnail.localFile.childImageSharp.fluid} />
-            <ShowreelPanelOverlay>
-              <ShowreelTitle>{title.text}</ShowreelTitle>
-              <RoleContainer>
-                {roles.map(
-                  ({ role }, index) =>
-                    role && (
-                      <RoleIcon
-                        key={index}
-                        src={role.document[0].data.icon.url}
-                        width={50}
-                      />
-                    )
-                )}
-              </RoleContainer>
-            </ShowreelPanelOverlay>
-          </ShowreelPanel>
-        )
-      })}
+      {panel && panel.map((props, index) => <Panel key={index} {...props} />)}
     </ShowreelSection>
     <AboutSection id="about">
       <About />
       <FooterContainer>
         {quick_links.map(({ icon, link_to_section, link }) => (
           <a
-            key={icon.url}
+            key={icon && icon.url}
             href={(link && link.url) || `#${link_to_section}`}
             target={(link && link.target) || '_self'}
           >
-            <FooterIcon width={50} src={icon.url} />
+            <FooterIcon width={50} src={icon && icon.url} />
           </a>
         ))}
       </FooterContainer>
