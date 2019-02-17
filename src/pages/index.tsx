@@ -37,16 +37,8 @@ const BackgroundVideo = styled.video`
 }
 `
 
-const Header = styled.div`
-  position: fixed;
-  height: ${HEADER_HEIGHT};
-  z-index: 10;
-`
-
 const Title = styled.h1`
   position: fixed;
-  width: 100%;
-  background: transparent;
   height: ${HEADER_HEIGHT};
   padding-left: 1rem;
   line-height: ${HEADER_HEIGHT};
@@ -188,6 +180,35 @@ const FooterIcon = styled.img`
     opacity: 1;
   }
 `
+
+const HeaderContainer = styled.div`
+  position: fixed;
+  transition: background-color 0.25s ease;
+  height: ${HEADER_HEIGHT};
+  z-index: 10;
+  width: 100%;
+  background: ${({ solid }) => (solid ? colors.black : 'transparent')};
+`
+
+const Header: React.FunctionComponent<{}> = ({ children }) => {
+  const [solid, setSolidBackground] = React.useState(false)
+  React.useEffect(() => {
+    const listener = () => {
+      const viewportHeight = Math.max(
+        document.documentElement.clientHeight,
+        window.innerHeight || 0
+      )
+      if (!solid && window.pageYOffset > viewportHeight * 0.75) {
+        setSolidBackground(true)
+      } else if (solid && window.pageYOffset < viewportHeight * 0.75) {
+        setSolidBackground(false)
+      }
+    }
+    window.addEventListener('scroll', listener)
+    return () => window.removeEventListener('scroll', listener)
+  })
+  return <HeaderContainer solid={solid}>{children}</HeaderContainer>
+}
 
 const SeparatorContainer = styled.div`
   height: ${HEADER_HEIGHT};
