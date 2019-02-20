@@ -204,6 +204,7 @@ const Header: React.FunctionComponent<{}> = ({ children }) => {
         setSolidBackground(false)
       }
     }
+    listener()
     window.addEventListener('scroll', listener)
     return () => window.removeEventListener('scroll', listener)
   })

@@ -5,6 +5,20 @@ exports.createPages = async ({ graphql, actions }) => {
 
   const pages = await graphql(`
     {
+      prismicIndexPage {
+        data {
+          quick_links {
+            icon {
+              url
+            }
+            link_to_section
+            link {
+              target
+              url
+            }
+          }
+        }
+      }
       allPrismicVideo {
         edges {
           node {
@@ -34,7 +48,8 @@ exports.createPages = async ({ graphql, actions }) => {
       component: template,
       context: {
         uid: edge.node.uid,
-        data: edge.node.data
+        data: edge.node.data,
+        quick_links: pages.data.prismicIndexPage.data.quick_links
       }
     })
   })
