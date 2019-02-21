@@ -72,6 +72,12 @@ const Main = styled.main`
   margin-top: ${HEADER_HEIGHT};
   max-width: 1280px;
   color: ${colors.white};
+  a {
+    color: ${colors.primary};
+  }
+  a:visited {
+    color: ${colors.primaryDark};
+  }
 `
 
 const VideoTitle = styled.h2`
