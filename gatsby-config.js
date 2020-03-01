@@ -14,15 +14,9 @@ module.exports = {
     },
     `gatsby-plugin-sharp`,
     `gatsby-transformer-sharp`,
-    // `gatsby-source-filesystem`,
     `gatsby-image`,
     `gatsby-plugin-typescript`,
-    {
-      resolve: `gatsby-plugin-typography`,
-      options: {
-        pathToConfigModule: `src/utils/typography`
-      }
-    },
-    `gatsby-plugin-styled-components`
+    'gatsby-plugin-theme-ui',
+    'gatsby-plugin-layout'
   ]
 }
