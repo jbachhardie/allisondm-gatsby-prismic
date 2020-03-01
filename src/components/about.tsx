@@ -37,11 +37,14 @@ const About = ({
   }
 }: Props) => (
   <Box as="article" marginX="auto">
-    <Grid columns="1fr 3fr">
+    <Grid columns={['1fr', '1fr 3fr']}>
       {profile_picture &&
         profile_picture.localFile &&
         profile_picture.localFile.childImageSharp && (
-          <Img fixed={profile_picture.localFile.childImageSharp.fixed} />
+          <Img
+            sx={{ marginX: 'auto' }}
+            fixed={profile_picture.localFile.childImageSharp.fixed}
+          />
         )}
       <div>
         {title && title.text && <Styled.h1>{title.text}</Styled.h1>}

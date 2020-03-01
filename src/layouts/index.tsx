@@ -66,14 +66,27 @@ const NavLink: React.FC<GatsbyLinkProps<unknown> & {
 
 const Layout: React.FC<{}> = ({ children }) => {
   return (
-    <div sx={{ maxWidth: '1024px', margin: 'auto', paddingX: 3 }}>
+    <div
+      sx={{
+        maxWidth: '1024px',
+        margin: 'auto',
+        paddingX: 3,
+        paddingTop: [3, null, 0]
+      }}
+    >
       <Grid
         gap={0}
-        sx={{ minHeight: '8rem', alignItems: 'center' }}
-        columns="min-content auto auto auto"
+        sx={{ minHeight: '8rem', alignItems: 'center', justifyItems: 'center' }}
+        columns={['auto auto auto', null, 'min-content auto auto auto']}
         as="nav"
       >
-        <Flex paddingRight={4} sx={{ alignItems: 'center' }}>
+        <Flex
+          paddingRight={4}
+          sx={{
+            alignItems: 'center',
+            gridColumnEnd: ['span 3', null, 'span 1']
+          }}
+        >
           <Logo />
           <Flex sx={{ flexDirection: 'column', justifyContent: 'center' }}>
             <Text variant="nav" sx={{ letterSpacing: 2.2 }}>
