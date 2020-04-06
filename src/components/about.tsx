@@ -1,64 +1,15 @@
+/** @jsx jsx */
 import * as React from 'react'
+import { jsx, Grid, Box, Styled } from 'theme-ui'
 import { StaticQuery, graphql } from 'gatsby'
 import Img from 'gatsby-image'
-import styled from 'styled-components'
-
-import * as colors from '../styles/colors'
+import HTMLRenderer from 'react-html-renderer'
 import {
   PrismicRichText,
   PrismicTitle,
   PrismicLink,
   PrismicMedia
 } from '../prismic-types'
-
-const BannerContainer = styled.div`
-  position: relative;
-`
-
-const VideoBanner = styled.video`
-  width: 100%;
-`
-
-const BlurbContainer = styled.div`
-  padding: 1rem;
-  max-width: 1080px;
-  margin: auto;
-`
-
-const QuickLinkContainer = styled.div`
-  position: absolute;
-  bottom: 0.5rem;
-  width: 100%;
-  display: flex;
-  justify-content: space-evenly;
-  z-index: 1;
-  @media (min-width: 640px) {
-    bottom: 1rem;
-  }
-`
-
-const QuickLink = styled.a`
-  text-decoration: none;
-  text-transform: uppercase;
-  color: ${colors.white};
-  font-size: 1.75rem;
-  font-family: 'Antonio';
-  font-weight: 300;
-  letter-spacing: 0.1rem;
-`
-
-const PortraitContainer = styled.div`
-  float: left;
-  padding-right: 1rem;
-  width: 25%;
-  img {
-    margin: 0;
-  }
-  display: none;
-  @media (min-width: 640px) {
-    display: unset;
-  }
-`
 
 interface Props {
   data: {
@@ -72,6 +23,7 @@ interface Props {
         }>
         profile_picture?: PrismicMedia
         blurb?: PrismicRichText
+        showreel?: PrismicRichText
       }
     }
   }
@@ -80,49 +32,52 @@ interface Props {
 const About = ({
   data: {
     prismicAbout: {
-      data: { title, banner_video, quick_links, profile_picture, blurb }
+      data: { title, profile_picture, blurb, showreel }
     }
   }
 }: Props) => (
-  <>
-    <BannerContainer>
-      {banner_video && (
-        <VideoBanner autoPlay loop muted playsInline>
-          <source src={banner_video.url} type="video/mp4" />
-        </VideoBanner>
-      )}
-      {quick_links && (
-        <QuickLinkContainer>
-          {quick_links.map(
-            ({ title, link }) =>
-              link &&
-              title && (
-                <QuickLink
-                  key={link.url}
-                  href={link.url}
-                  target={link.target || '_self'}
-                >
-                  {title.text}
-                </QuickLink>
-              )
-          )}
-        </QuickLinkContainer>
-      )}
-    </BannerContainer>
-    <BlurbContainer>
+  <Box as="article" marginX="auto">
+    <Grid columns={['1fr', '1fr 3fr']}>
       {profile_picture &&
         profile_picture.localFile &&
         profile_picture.localFile.childImageSharp && (
-          <PortraitContainer>
-            <Img fluid={profile_picture.localFile.childImageSharp.fluid} />
-          </PortraitContainer>
+          <Img
+            sx={{ marginX: 'auto' }}
+            fixed={profile_picture.localFile.childImageSharp.fixed}
+          />
         )}
-      {title && title.text && <h2>{title.text}</h2>}
-      {blurb && blurb.html && (
-        <div dangerouslySetInnerHTML={{ __html: blurb.html }} />
-      )}
-    </BlurbContainer>
-  </>
+      <div>
+        {title && title.text && <Styled.h1>{title.text}</Styled.h1>}
+        {blurb && blurb.html && (
+          <HTMLRenderer html={blurb.html} components={Styled} />
+        )}
+      </div>
+    </Grid>
+    {showreel && (
+      <Box paddingTop={3}>
+        <div
+          sx={{
+            textAlign: 'center',
+            position: 'relative',
+            paddingBottom: '56.25%',
+            height: 0,
+            overflow: 'hidden',
+            maxWidth: '100%',
+            '& iframe': {
+              margin: 0,
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%'
+            }
+          }}
+          id="video"
+          dangerouslySetInnerHTML={{ __html: showreel.html }}
+        />
+      </Box>
+    )}
+  </Box>
 )
 
 const AboutContainer = (props: {}) => (
@@ -134,28 +89,19 @@ const AboutContainer = (props: {}) => (
             title {
               text
             }
-            banner_video {
-              url
-            }
-            quick_links {
-              title {
-                text
-              }
-              link {
-                url
-                target
-              }
-            }
             profile_picture {
               localFile {
                 childImageSharp {
-                  fluid(maxWidth: 320) {
-                    ...GatsbyImageSharpFluid_withWebp
+                  fixed(width: 320) {
+                    ...GatsbyImageSharpFixed_withWebp
                   }
                 }
               }
             }
             blurb {
+              html
+            }
+            showreel {
               html
             }
           }
